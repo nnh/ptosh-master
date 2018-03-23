@@ -5,6 +5,22 @@ ReplaceNames <- function(df, beforenames, afternames){
   names(df) <- wknames
   return(df)
 }
+ResDuplicated <- function(df, sortkey, output_columns){
+  # データフレームdfのsortkeyが重複しているレコードのみ返す
+  # output_columnsで指定した列のみ
+  sortlist <- order(df[ ,sortkey])
+  wk_df <- df[sortlist, ]
+  wk_df$check_f <- F
+  # 重複チェック
+  for (i in 1:(length(wk_df[ ,sortkey])-1)){
+    # 次のレコードの値が同じなら重複とし、check_f<-T
+    if (wk_df[i, sortkey] == wk_df[i + 1, sortkey]) {
+      wk_df[i, "check_f"] <- T
+      wk_df[i + 1, "check_f"] <- T
+    }
+  }
+  return(subset(wk_df, wk_df$check_f == T, output_columns))
+}
 
 prtpath <- "//aronas/Projects/NMC ISR 情報システム研究室/MedDRA"
 # 入力フォルダ指定時はkInputpathにフォルダ名をセット、NAがセットされていたらprtpath配下全て処理する
@@ -148,6 +164,17 @@ for (i in 1:length(meddralist)) {
     # 出力列順の変更
     df_output <- df_all_merge[c("soc_code", "pt_code", "llt_code", "soc_name", "soc_kanji", "pt_name",
                                 "pt_kanji", "llt_name", "llt_kanji", "llt_currency", "pt_primary_soc_fg", "llt_primary_soc_fg")]
+
+    # LLT 英語と日本語が1:nになっているレコードを抽出
+    df_output_llt_kanji_duplicated <- ResDuplicated(df_output, "llt_kanji", c("llt_kanji", "llt_name"))
+    # LLT 日本語と英語が1:nになっているレコードを抽出
+    df_output_llt_name_duplicated <- ResDuplicated(df_output, "llt_name", c("llt_kanji", "llt_name"))
+    # pt_kanji, pt_nameが重複しているレコードは削除
+    wk_df_output_pt <- unique(df_output[ ,c("pt_kanji", "pt_name")])
+    # PT 英語と日本語が1:nになっているレコードを抽出
+    df_output_pt_kanji_duplicated <- ResDuplicated(wk_df_output_pt, "pt_kanji", c("pt_kanji", "pt_name"))
+    # PT 日本語と英語が1:nになっているレコードを抽出
+    df_output_pt_name_duplicated <- ResDuplicated(wk_df_output_pt, "pt_name", c("pt_kanji", "pt_name"))
     # CSV出力
     # フォルダが無ければ作成
     outputvarpath <- paste0(outputpath, "/", wk_output)
