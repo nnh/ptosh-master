@@ -1,3 +1,6 @@
+# #####################
+# Function definition #
+#######################
 ReplaceNames <- function(df, beforenames, afternames){
   # データフレームdfの列名の、beforenamesをafternamesに変更し返す
   wknames <- names(df)
@@ -12,7 +15,7 @@ ResDuplicated <- function(df, sortkey, output_columns){
   wk_df <- df[sortlist, ]
   wk_df$check_f <- F
   # 重複チェック
-  for (i in 1:(length(wk_df[ ,sortkey])-1)){
+  for (i in 1:(length(wk_df[ ,sortkey])-1)) {
     # 次のレコードの値が同じなら重複とし、check_f<-T
     if (wk_df[i, sortkey] == wk_df[i + 1, sortkey]) {
       wk_df[i, "check_f"] <- T
@@ -21,11 +24,14 @@ ResDuplicated <- function(df, sortkey, output_columns){
   }
   return(subset(wk_df, wk_df$check_f == T, output_columns))
 }
-
+#######################
+# Constant definition #
+#######################
 prtpath <- "//aronas/Projects/NMC ISR 情報システム研究室/MedDRA"
+output_foldername <- "/output_ptosh_option"
 # 入力フォルダ指定時はkInputpathにフォルダ名をセット、NAがセットされていたらprtpath配下全て処理する
-kInputpath <- "V21.0"
-# kInputpath <- NA
+# kInputpath <- "V21.0"
+kInputpath <- NA
 # output csv name
 kOutputCSV <- "output.csv"
 # input csv name
@@ -50,17 +56,19 @@ kSoc_colname <- c("soc_code", "soc_name", "soc_abbrev", "soc_whoart_code", "soc_
                   "soc_costart_sym", "soc_icd9_code", "soc_icd9cm_code", "soc_icd10_code", "soc_jart_code", "temp_soc")
 kMdhier_colname <- c("pt_code", "hlt_code", "hlgt_code", "mdhier_soc_code", "pt_name", "hlt_name",
                      "hlgt_name", "soc_name", "soc_abbrev", "null_field", "mdhier_pt_soc_code", "primary_soc_fg", "temp_mdhier")
+########################################################################################################################
+
 # 出力フォルダが存在しなければ作成
-outputpath <- paste0(prtpath, "/output_20180320")
-if (!(file.exists(outputpath))){
+outputpath <- paste0(prtpath, output_foldername)
+if (!(file.exists(outputpath))) {
   dir.create(outputpath)
 }
 # フォルダ名リストを取得
 wk_meddralist <- list.files(prtpath, full.names=T)
-# 配下にデータがあるものをフォルダと判定し残す
+# 配下にデータがあるものをフォルダと判定
 for (i in 1:length(wk_meddralist)) {
   temp_meddra <- list.files(wk_meddralist[i])
-  if (length(temp_meddra)==0) {
+  if (length(temp_meddra) == 0) {
     wk_meddralist[i] <- NA
   }
 }
@@ -95,13 +103,13 @@ for (i in 1:length(meddralist)) {
     # LLT #
     #######
     # LLT_J読み込み
-    llt_jpath <- paste0(meddrapath, "/" ,kLlt_j_CSV)
+    llt_jpath <- paste0(meddrapath, "/", kLlt_j_CSV)
     df_llt_j <- read.csv(llt_jpath, as.is=T, sep="$", header=F)
     names(df_llt_j) <- kLlt_j_colname
     # llt_code, llt_kanjiのみ出力
     df_llt_j <- df_llt_j[c("llt_code", "llt_kanji")]
     # LLT読み込み
-    lltpath <- paste0(meddrapath, "/" ,kLlt_CSV)
+    lltpath <- paste0(meddrapath, "/", kLlt_CSV)
     wk_llt <- read.csv(lltpath, as.is=T, sep="$", header=F)
     names(wk_llt) <- kLlt_colname
     # llt_code, pt_code, llt_name, llt_currencyのみ出力
@@ -114,12 +122,11 @@ for (i in 1:length(meddralist)) {
     df_llt_mdhier_merge <- merge(df_llt_merge, df_mdhier, by="pt_code", all.x=T)
     # 列名primary_soc_fg->llt_primary_soc_fgに変更する
     df_llt_mdhier_merge <- ReplaceNames(df_llt_mdhier_merge, "primary_soc_fg", "llt_primary_soc_fg")
-
     ######
     # PT #
     ######
     # PT_J読み込み
-    pt_jpath <- paste0(meddrapath, "/" ,kpt_j_CSV)
+    pt_jpath <- paste0(meddrapath, "/", kpt_j_CSV)
     df_pt_j <- read.csv(pt_jpath, as.is=T, sep="$", header=F)
     names(df_pt_j) <- kPt_j_colname
     # pt_code, pt_kanjiのみ出力
@@ -140,13 +147,13 @@ for (i in 1:length(meddralist)) {
     # soc #
     #######
     # soc_J読み込み
-    soc_jpath <- paste0(meddrapath, "/" ,kSoc_j_CSV)
+    soc_jpath <- paste0(meddrapath, "/", kSoc_j_CSV)
     df_soc_j <- read.csv(soc_jpath, as.is=T, sep="$", header=F)
     names(df_soc_j) <- kSoc_j_colname
     # soc_code, soc_kanjiのみ出力
     df_soc_j <- df_soc_j[c("soc_code", "soc_kanji")]
     # soc読み込み
-    socpath <- paste0(meddrapath, "/" ,kSoc_CSV)
+    socpath <- paste0(meddrapath, "/", kSoc_CSV)
     df_soc <- read.csv(socpath, as.is=T, sep="$", header=F)
     names(df_soc) <- kSoc_colname
     # soc_code, soc_nameのみ出力
@@ -164,24 +171,36 @@ for (i in 1:length(meddralist)) {
     # 出力列順の変更
     df_output <- df_all_merge[c("soc_code", "pt_code", "llt_code", "soc_name", "soc_kanji", "pt_name",
                                 "pt_kanji", "llt_name", "llt_kanji", "llt_currency", "pt_primary_soc_fg", "llt_primary_soc_fg")]
-
+    ####################
+    # edit output data #
+    ####################
     # LLT 英語と日本語が1:nになっているレコードを抽出
-    df_output_llt_kanji_duplicated <- ResDuplicated(df_output, "llt_kanji", c("llt_kanji", "llt_name"))
+    df_output_llt_name_duplicated <- ResDuplicated(df_output, "llt_kanji", c("llt_kanji", "llt_name"))
     # LLT 日本語と英語が1:nになっているレコードを抽出
-    df_output_llt_name_duplicated <- ResDuplicated(df_output, "llt_name", c("llt_kanji", "llt_name"))
+    df_output_llt_kanji_duplicated <- ResDuplicated(df_output, "llt_name", c("llt_kanji", "llt_name"))
     # pt_kanji, pt_nameが重複しているレコードは削除
     wk_df_output_pt <- unique(df_output[ ,c("pt_kanji", "pt_name")])
     # PT 英語と日本語が1:nになっているレコードを抽出
-    df_output_pt_kanji_duplicated <- ResDuplicated(wk_df_output_pt, "pt_kanji", c("pt_kanji", "pt_name"))
+    df_output_pt_name_duplicated <- ResDuplicated(wk_df_output_pt, "pt_kanji", c("pt_kanji", "pt_name"))
     # PT 日本語と英語が1:nになっているレコードを抽出
-    df_output_pt_name_duplicated <- ResDuplicated(wk_df_output_pt, "pt_name", c("pt_kanji", "pt_name"))
-    # CSV出力
+    df_output_pt_kanji_duplicated <- ResDuplicated(wk_df_output_pt, "pt_name", c("pt_kanji", "pt_name"))
+    ##############
+    # output csv #
+    ##############
     # フォルダが無ければ作成
     outputvarpath <- paste0(outputpath, "/", wk_output)
-    if (!(file.exists(outputvarpath))){
+    if (!(file.exists(outputvarpath))) {
       dir.create(outputvarpath)
     }
     # 全データ出力
-    write.csv(df_output, paste(outputvarpath, "1.csv", sep="/"), na='""', row.names=F)
+    write.csv(df_output, paste(outputvarpath, "ptosh_option.csv", sep="/"), na='""', row.names=F)
+    # llt name:kanji=1:n
+    write.csv(df_output_llt_kanji_duplicated, paste(outputvarpath, "llt_kanji_duplicated.csv", sep="/"), na='""', row.names=F)
+    # llt kanji:name=1:n
+    write.csv(df_output_llt_name_duplicated, paste(outputvarpath, "llt_name_duplicated.csv", sep="/"), na='""', row.names=F)
+    # llt name:kanji=1:n
+    write.csv(df_output_pt_kanji_duplicated, paste(outputvarpath, "pt_kanji_duplicated.csv", sep="/"), na='""', row.names=F)
+    # pt kanji:name=1:n
+    write.csv(df_output_pt_name_duplicated, paste(outputvarpath, "pt_name_duplicated.csv", sep="/"), na='""', row.names=F)
     }
 }
