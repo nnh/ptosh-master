@@ -225,10 +225,10 @@ if (file_existence_f == T) {
                               "pt_kanji", "llt_name", "llt_kanji", "llt_currency", "pt_primary_soc_fg",
                               "llt_primary_soc_fg", "llt_jcurr")]
   # Ptosh option用出力データ
-  df_MedDRA_option <- df_MedDRA
-  df_MedDRA_option$name <- df_MedDRA$llt_name
-  df_MedDRA_option$kanji <- paste0(df_MedDRA$llt_kanji, "; ", df_MedDRA$llt_name)
-  df_MedDRA_option <- df_MedDRA_option[c("name", "kanji")]
+  df_MedDRA_option <- data.frame(temp = rep(NA, nrow(df_MedDRA)))
+  df_MedDRA_option$llt_name <- df_MedDRA$llt_name
+  df_MedDRA_option$llt_kanji <- paste0(df_MedDRA$llt_kanji, "; ", df_MedDRA$llt_name)
+  df_MedDRA_option <- df_MedDRA_option[c("llt_name", "llt_kanji")]
   write.csv(df_MedDRA, paste(output_path, "MedDRA.csv", sep="/"), na='""', row.names=F)
   write.csv(df_MedDRA_option, paste(output_path, "MedDRA_option.csv", sep="/"), na='""', row.names=F)
 }
