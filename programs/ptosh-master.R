@@ -221,9 +221,14 @@ if (file_existence_f == T) {
   }
   df_output_all_merge <- subset(df_sort_all_merge_ctcae, delete_f == F)
   # 出力列順の変更
-  df_output <- df_output_all_merge[c("soc_code", "pt_code", "llt_code", "soc_name", "soc_kanji", "pt_name",
+  df_MedDRA <- df_output_all_merge[c("soc_code", "pt_code", "llt_code", "soc_name", "soc_kanji", "pt_name",
                               "pt_kanji", "llt_name", "llt_kanji", "llt_currency", "pt_primary_soc_fg",
                               "llt_primary_soc_fg", "llt_jcurr")]
-  # 全データ出力
-  write.csv(df_output, paste(output_path, "ptosh_option.csv", sep="/"), na='""', row.names=F)
+  # Ptosh option用出力データ
+  df_MedDRA_option <- df_MedDRA
+  df_MedDRA_option$name <- df_MedDRA$llt_name
+  df_MedDRA_option$kanji <- paste0(df_MedDRA$llt_kanji, "; ", df_MedDRA$llt_name)
+  df_MedDRA_option <- df_MedDRA_option[c("name", "kanji")]
+  write.csv(df_MedDRA, paste(output_path, "MedDRA.csv", sep="/"), na='""', row.names=F)
+  write.csv(df_MedDRA_option, paste(output_path, "MedDRA_option.csv", sep="/"), na='""', row.names=F)
 }
