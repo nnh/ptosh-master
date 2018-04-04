@@ -31,10 +31,6 @@ SortDF <- function(df, sortkey1, sortkey2){
   df_sort <- df[sortlist, ]
   return(df_sort)
 }
-WriteCsv <- function(df, output_path, output_csvname){
-  write.csv(df, paste(output_path, output_csvname, sep="/"), na='""', row.names=F, fileEncoding="CP932")
-  return(NA)
-}
 #######################
 # Constant definition #
 #######################
@@ -106,7 +102,7 @@ if (!is.na(input_path)) {
     }
   }
 }
-if (file_existence_f == T){
+if (file_existence_f == T) {
   ##########
   # MDHIER #
   ##########
@@ -228,30 +224,6 @@ if (file_existence_f == T){
   df_output <- df_output_all_merge[c("soc_code", "pt_code", "llt_code", "soc_name", "soc_kanji", "pt_name",
                               "pt_kanji", "llt_name", "llt_kanji", "llt_currency", "pt_primary_soc_fg",
                               "llt_primary_soc_fg", "llt_jcurr")]
-  ####################
-  # edit output data #
-  ####################
-  # LLT 英語と日本語が1:nになっているレコードを抽出
-  df_output_llt_name_duplicated <- ResDuplicated(df_output, "llt_kanji", c("llt_kanji", "llt_name"))
-  # LLT 日本語と英語が1:nになっているレコードを抽出
-  df_output_llt_kanji_duplicated <- ResDuplicated(df_output, "llt_name", c("llt_kanji", "llt_name"))
-  # pt_kanji, pt_nameが重複しているレコードは削除
-  temp_df_output_pt <- unique(df_output[ ,c("pt_kanji", "pt_name")])
-  # PT 英語と日本語が1:nになっているレコードを抽出
-  df_output_pt_name_duplicated <- ResDuplicated(temp_df_output_pt, "pt_kanji", c("pt_kanji", "pt_name"))
-  # PT 日本語と英語が1:nになっているレコードを抽出
-  df_output_pt_kanji_duplicated <- ResDuplicated(temp_df_output_pt, "pt_name", c("pt_kanji", "pt_name"))
-  ##############
-  # output csv #
-  ##############
   # 全データ出力
-  temp <- WriteCsv(df_output, output_path, "ptosh_option.csv")
-  # llt name:kanji=1:nのデータ出力
-  temp <- WriteCsv(df_output_llt_kanji_duplicated, output_path, "llt_kanji_duplicated.csv")
-  # llt kanji:name=1:nのデータ出力
-  temp <- WriteCsv(df_output_llt_name_duplicated, output_path, "llt_name_duplicated.csv")
-  # pt name:kanji=1:nのデータ出力
-  temp <- WriteCsv(df_output_pt_kanji_duplicated, output_path, "pt_kanji_duplicated.csv")
-  # pt kanji:name=1:nのデータ出力
-  temp <- WriteCsv(df_output_pt_name_duplicated, output_path, "pt_name_duplicated.csv")
+  write.csv(df_output, paste(output_path, "ptosh_option.csv", sep="/"), na='""', row.names=F)
 }
