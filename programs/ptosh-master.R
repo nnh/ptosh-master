@@ -220,12 +220,11 @@ if (file_existence_f == T) {
     }
   }
   df_output_all_merge <- subset(df_sort_all_merge_ctcae, delete_f == F)
-  # 出力列順の変更
-  df_MedDRA <- df_output_all_merge[c("soc_code", "pt_code", "llt_code", "soc_name", "soc_kanji", "pt_name",
-                              "pt_kanji", "llt_name", "llt_kanji", "llt_currency", "pt_primary_soc_fg",
-                              "llt_primary_soc_fg", "llt_jcurr")]
   # Ptosh option用出力データ
-  df_MedDRA$llt_label_name <- df_MedDRA$llt_name
-  df_MedDRA$llt_label_kanji <- paste0(df_MedDRA$llt_kanji, "; ", df_MedDRA$llt_name)
+  df_output_all_merge$llt_label <- paste0(df_output_all_merge$llt_kanji, "; ", df_output_all_merge$llt_name)
+  # 出力列順の変更
+  df_MedDRA <- df_output_all_merge[c("soc_code", "soc_name", "soc_kanji", "pt_code", "pt_name",
+                              "pt_kanji", "llt_code", "llt_name", "llt_kanji", "llt_label", "pt_primary_soc_fg",
+                              "llt_primary_soc_fg", "llt_currency", "llt_jcurr")]
   write.csv(df_MedDRA, paste(output_path, "MedDRA.csv", sep="/"), na='""', row.names=F)
 }
