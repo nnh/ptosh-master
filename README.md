@@ -28,10 +28,8 @@ MedDRA\Vxx.x\ASCII\配下に複数フォルダが存在した場合は処理を�
 ### ファイル名
 MedDRA.csv
 ### スキーマ
-|header1|header2|
-|:--|--:|
-|align left|align left|
 |フィールド名|説明|
+|:--|--:|
 |soc_code|soc.ascのsoc_code|
 |soc_name|soc.ascのsoc_name|
 |soc_kanji|soc_j.ascのsoc_kanji|
