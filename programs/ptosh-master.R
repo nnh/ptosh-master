@@ -37,9 +37,8 @@ SortDF <- function(df, sortkey1, sortkey2){
 Sys.setenv("TZ" = "Asia/Tokyo")
 # MedDRAバージョン指定
 kVersion <- "V21.0"
-kOutput_foldername <- "output_ptosh_option"
-input_prt_path <- "/Volumes/References/NMC ISR 情報システム研究室/MedDRA"
-output_prt_path <- "/Volumes/Projects/NMC ISR 情報システム研究室/MedDRA"
+# asciiフォルダ配下で入出力
+input_prt_path <- "/Volumes/Projects/NMC ISR 情報システム研究室/MedDRA"
 # input csv name
 kLlt_j_csv <- "llt_j.asc"
 kLlt_csv <- "llt.asc"
@@ -75,12 +74,9 @@ if (length(temp_input_list) == 1) {
 } else {
   input_path <- NA
 }
-output_path <- paste0(output_prt_path, "/", kVersion, "/", kOutput_foldername)
+output_path <- input_path
 ctcae_path <- "/Volumes/Projects/NMC ISR 情報システム研究室/MedDRA/V21.0/CTCAE"  # CTCAEデータ
-# 出力フォルダが存在しなければ作成
-if (file.exists(output_path) == F) {
-  dir.create(output_path)
-}
+
 # MedDRA、CTCAEフォルダ配下のファイル存在チェック
 file_existence_f <- F
 if (!is.na(input_path)) {
@@ -123,6 +119,11 @@ if (file_existence_f == T) {
   names(df_llt_j) <- kLlt_j_colname
   # llt_code, llt_kanji, llt_jcurrのみ出力
   df_llt_j <- df_llt_j[c("llt_code", "llt_kanji", "llt_jcurr")]
+  # ptosh option用LLT_J読み込み
+  df_llt_j2 <- read.table(llt_j_path, as.is=T, sep="\n", header=F, fileEncoding="CP932")
+  names(df_llt_j2) <- "llt_j"
+  # llt_codeを2列目にセット
+  df_llt_j2$llt_code <- df_llt_j$llt_code
   # LLT読み込み
   llt_path <- paste0(input_path, "/", kLlt_csv)
   temp_llt <- read.csv(llt_path, as.is=T, sep="$", header=F, fileEncoding="CP932")
@@ -220,11 +221,12 @@ if (file_existence_f == T) {
     }
   }
   df_output_all_merge <- subset(df_sort_all_merge_ctcae, delete_f == F)
-  # Ptosh option用出力データ
-  df_output_all_merge$llt_label <- paste0(df_output_all_merge$llt_kanji, "; ", df_output_all_merge$llt_name)
-  # 出力列順の変更
-  df_MedDRA <- df_output_all_merge[c("soc_code", "soc_name", "soc_kanji", "pt_code", "pt_name",
-                              "pt_kanji", "llt_code", "llt_name", "llt_kanji", "llt_label", "pt_primary_soc_fg",
-                              "llt_primary_soc_fg", "llt_currency", "llt_jcurr")]
-  write.csv(df_MedDRA, paste(output_path, "MedDRA.csv", sep="/"), na='""', row.names=F)
+  # llt_j.ascから条件に合致したレコードを抽出する
+  sortlist <- order(df_output_all_merge$llt_code)
+  df_sort_output_all_merge <- df_output_all_merge[sortlist, ]
+  sortlist <- order(df_llt_j2$llt_code)
+  df_sort_llt_j2 <- df_llt_j2[sortlist, ]
+  df_merge_llt_j2 <- merge(df_sort_llt_j2, df_sort_output_all_merge, by="llt_code")
+  write.table(df_merge_llt_j2$llt_j, paste(output_path, "llt_j2.asc", sep="/"), append=F, quote=F,
+              col.names=F, row.names=F, eol="\r\n", fileEncoding="CP932")
 }
