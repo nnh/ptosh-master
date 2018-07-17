@@ -8,11 +8,12 @@ MedDRA\Vxx.x\ASCII\配下に複数フォルダが存在した場合は処理を�
 プログラム2行目「# install.packages('readxl')」の文頭の#を消し、行選択してプログラムを実行する。  
 インストール終了後は再度文頭に#を付与し、コメントアウトする。  
 ### CTCAEダウンロード
-[ここからEXCELファイルをダウンロード](http://www.jcog.jp/doctor/tool/ctcaev4.html)して任意の場所に保存する。  
-### MedDRAバージョン、入出力パスの設定
+MedDRA\Vxx.xフォルダ配下に、「CTCAE」フォルダを作成する。  
+[ここからEXCELファイルをダウンロード](http://www.jcog.jp/doctor/tool/ctcaev4.html)してCTCAEフォルダに保存する。  
+### 作業ディレクトリの設定
+RStudioのMenuで、Session - choose Directoryをクリックし、 "aronas/Projects/NMC ISR 情報システム研究室/MedDRA" を選択する。  
+### MedDRAバージョンの設定
 プログラム39行目「kVersion」を対象とするMedDRAのバージョンに書き換える。  
-プログラム41行目「input_prt_path」をMedDRAフォルダのパスに書き換える。  
-プログラム78行目「ctcae_path」をCTCAEフォルダのパスに書き換える。  
   
 ## 出力ファイル
 ### ファイル名
