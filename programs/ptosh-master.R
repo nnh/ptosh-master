@@ -1,9 +1,11 @@
-# readxlのインストールが必要
+# （初回のみ）readxlのインストールが必要
 # install.packages('readxl')
+# （処理毎に）下記の手順が必要
+# RStudio - Menu - Session - choose Directory
+# "aronas/Projects/NMC ISR 情報システム研究室/MedDRA" を選択
+# load library ------
 library("readxl")
-#######################
-# Function definition #
-#######################
+# Function definition ------
 ReplaceNames <- function(df, before_names, after_names){
   # データフレームdfの列名の、before_namesをafter_namesに変更し返す
   temp_names <- replace(names(df), match(before_names, names(df)), after_names)
@@ -31,14 +33,14 @@ SortDF <- function(df, sortkey1, sortkey2){
   df_sort <- df[sortlist, ]
   return(df_sort)
 }
-#######################
-# Constant definition #
-#######################
+# Constant definition ------
 Sys.setenv("TZ" = "Asia/Tokyo")
 # MedDRAバージョン指定
-kVersion <- "V21.0"
+kVersion <- "V20.1"
 # asciiフォルダ配下で入出力
-input_prt_path <- "/Volumes/Projects/NMC ISR 情報システム研究室/MedDRA"
+if (!exists("input_prt_path")) {
+  input_prt_path <- getwd()
+}
 # input csv name
 kLlt_j_csv <- "llt_j.asc"
 kLlt_csv <- "llt.asc"
@@ -48,24 +50,32 @@ kSoc_j_csv <- "soc_j.asc"
 kSoc_csv <- "soc.asc"
 kMdhier_csv <- "mdhier.asc"
 # input csv column name
-kLlt_j_colname <- c("llt_code", "llt_kanji", "llt_jcurr", "llt_kana", "llt_kana1", "llt_kana2")
+kLlt_j_colname <- c("llt_code", "llt_kanji", "llt_jcurr", "llt_kana",
+                    "llt_kana1", "llt_kana2")
 kLlt_colname <- c("llt_code", "llt_name", "pt_code", "llt_whoart_code",
                   "llt_harts_code", "llt_costart_sym", "llt_icd9_code",
-                  "llt_icd9cm_code", "llt_icd10_code", "llt_currency", "llt_jart_code", "temp_llt")
+                  "llt_icd9cm_code", "llt_icd10_code", "llt_currency",
+                  "llt_jart_code", "temp_llt")
 kPt_j_colname <- c("pt_code", "pt_kanji", "pt_kana", "pt_kana1", "pt_kana2")
-kPt_colname <- c("pt_code", "pt_name", "null_field", "pt_soc_code", "pt_whoart_code",
-                 "pt_harts_code", "pt_costart_sym", "pt_icd9_code", "pt_icd9cm_code",
-                 "pt_icd10_code", "pt_jart_code", "temp_pt")
-kSoc_j_colname <- c("soc_code", "soc_kanji", "soc_order", "soc_kana", "soc_kana1", "soc_kana2")
-kSoc_colname <- c("soc_code", "soc_name", "soc_abbrev", "soc_whoart_code", "soc_harts_code",
-                  "soc_costart_sym", "soc_icd9_code", "soc_icd9cm_code", "soc_icd10_code", "soc_jart_code", "temp_soc")
-kMdhier_colname <- c("pt_code", "hlt_code", "hlgt_code", "mdhier_soc_code", "pt_name", "hlt_name",
-                     "hlgt_name", "soc_name", "soc_abbrev", "null_field", "mdhier_pt_soc_code", "primary_soc_fg", "temp_mdhier")
-kCtcae_colname <- c("seq", "llt_code", "soc", "soc_kanji", "llt_name", "llt_kanji", "Grade1", "Grade1_j",
-                    "Grade2", "Grade2_j", "Grade3", "Grade3_j", "Grade4", "Grade4_j", "Grade5", "Grade5_j",
-                    "AE_Term_Definition", "AE_Term_Definition_j")
-########################################################################################################################
-# パス設定
+kPt_colname <- c("pt_code", "pt_name", "null_field", "pt_soc_code",
+                 "pt_whoart_code", "pt_harts_code", "pt_costart_sym",
+                 "pt_icd9_code", "pt_icd9cm_code", "pt_icd10_code",
+                 "pt_jart_code", "temp_pt")
+kSoc_j_colname <- c("soc_code", "soc_kanji", "soc_order", "soc_kana",
+                    "soc_kana1", "soc_kana2")
+kSoc_colname <- c("soc_code", "soc_name", "soc_abbrev", "soc_whoart_code",
+                  "soc_harts_code", "soc_costart_sym", "soc_icd9_code",
+                  "soc_icd9cm_code", "soc_icd10_code", "soc_jart_code",
+                  "temp_soc")
+kMdhier_colname <- c("pt_code", "hlt_code", "hlgt_code", "mdhier_soc_code",
+                     "pt_name", "hlt_name", "hlgt_name", "soc_name",
+                     "soc_abbrev",  "null_field", "mdhier_pt_soc_code",
+                     "primary_soc_fg", "temp_mdhier")
+kCtcae_colname <- c("seq", "llt_code", "soc", "soc_kanji", "llt_name",
+                    "llt_kanji", "Grade1", "Grade1_j", "Grade2", "Grade2_j",
+                    "Grade3", "Grade3_j", "Grade4", "Grade4_j", "Grade5",
+                    "Grade5_j", "AE_Term_Definition", "AE_Term_Definition_j")
+# path setting ------
 # MedDRA\Vxx.x\ASCII\MDRA_Jxxx(xxxはバージョン毎に異なる)に入力ファイルが格納されている
 input_path <- paste0(input_prt_path, "/", kVersion, "/", "ASCII/")
 temp_input_list <- list.files(input_path)
@@ -75,8 +85,8 @@ if (length(temp_input_list) == 1) {
   input_path <- NA
 }
 output_path <- input_path
-ctcae_path <- "/Volumes/Projects/NMC ISR 情報システム研究室/MedDRA/V21.0/CTCAE"  # CTCAEデータ
-
+ctcae_path <- paste0(input_prt_path, "/", kVersion, "/", "CTCAE/")  # CTCAEデータ
+# file exists check ------
 # MedDRA、CTCAEフォルダ配下のファイル存在チェック
 file_existence_f <- F
 if (!is.na(input_path)) {
@@ -98,6 +108,7 @@ if (!is.na(input_path)) {
     }
   }
 }
+# merge ------
 if (file_existence_f == T) {
   ##########
   # MDHIER #
