@@ -36,7 +36,7 @@ SortDF <- function(df, sortkey1, sortkey2){
 # Constant definition ------
 Sys.setenv("TZ" = "Asia/Tokyo")
 # MedDRAバージョン指定
-kVersion <- "V20.1"
+kVersion <- "V22.1"
 # asciiフォルダ配下で入出力
 if (!exists("input_prt_path")) {
   input_prt_path <- getwd()
@@ -74,7 +74,8 @@ kMdhier_colname <- c("pt_code", "hlt_code", "hlgt_code", "mdhier_soc_code",
 kCtcae_colname <- c("seq", "llt_code", "soc", "soc_kanji", "llt_name",
                     "llt_kanji", "Grade1", "Grade1_j", "Grade2", "Grade2_j",
                     "Grade3", "Grade3_j", "Grade4", "Grade4_j", "Grade5",
-                    "Grade5_j", "AE_Term_Definition", "AE_Term_Definition_j")
+                    "Grade5_j", "AE_Term_Definition", "AE_Term_Definition_j",
+                    "Navigational_Note", "Notes_on_search")
 # path setting ------
 # MedDRA\Vxx.x\ASCII\MDRA_Jxxx(xxxはバージョン毎に異なる)に入力ファイルが格納されている
 input_path <- paste0(input_prt_path, "/", kVersion, "/", "ASCII/")
