@@ -105,6 +105,8 @@ if (!is.na(input_path)) {
         # コード順にソート
         sortlist <- order(df_ctcae$llt_code)
         df_ctcae <- df_ctcae[sortlist, ]
+        # ctcae V5からseq列がNAになったため暫定で1をセット
+        df_ctcae$seq <- 1
       }
     }
   }
