@@ -78,7 +78,7 @@ kCtcae_colname <- c("seq", "llt_code", "soc", "soc_kanji", "llt_name",
                     "Navigational_Note", "Notes_on_search")
 # path setting ------
 # MedDRA\Vxx.x\ASCII\MDRA_Jxxx(xxxはバージョン毎に異なる)に入力ファイルが格納されている
-input_path <- paste0(input_prt_path, "/", kVersion, "/", "ASCII/")
+input_path <- paste0(input_prt_path, "/", kVersion, "/", "ASCII")
 temp_input_list <- list.files(input_path)
 if (length(temp_input_list) == 1) {
   input_path <- paste0(input_path, "/", temp_input_list)
@@ -86,7 +86,7 @@ if (length(temp_input_list) == 1) {
   input_path <- NA
 }
 output_path <- input_path
-ctcae_path <- paste0(input_prt_path, "/", kVersion, "/", "CTCAE/")  # CTCAEデータ
+ctcae_path <- paste0(input_prt_path, "/", kVersion, "/", "CTCAE")  # CTCAEデータ
 # file exists check ------
 # MedDRA、CTCAEフォルダ配下のファイル存在チェック
 file_existence_f <- F

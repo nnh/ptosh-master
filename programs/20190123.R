@@ -30,14 +30,14 @@ kCtcae_colname <- c("seq", "llt_code", "soc", "soc_kanji", "llt_name",
                     "Grade5_j", "AE_Term_Definition", "AE_Term_Definition_j",
                     "Navigational_Note", "Notes_on_search")
 
-test_ctcae <- read_excel("/Volumes/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/CTCAE/CTCAEv5J_20190905_v22_1.xlsx", sheet=1, col_names=T)
-test_mdhier <- read.csv("/Volumes/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/mdhier.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
-test_soc <- read.csv("/Volumes/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/soc.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
-test_soc_j <- read.csv("/Volumes/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/soc_j.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
-test_pt <- read.csv("/Volumes/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/pt.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
-test_pt_j <- read.csv("/Volumes/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/pt_j.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
-test_llt <- read.csv("/Volumes/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/llt.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
-test_llt_j <- read.csv("/Volumes/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/llt_j.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
+test_ctcae <- read_excel("//aronas/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/CTCAE/CTCAEv5J_20190905_v22_1.xlsx", sheet=1, col_names=T)
+test_mdhier <- read.csv("//aronas/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/mdhier.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
+test_soc <- read.csv("//aronas/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/soc.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
+test_soc_j <- read.csv("//aronas/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/soc_j.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
+test_pt <- read.csv("//aronas/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/pt.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
+test_pt_j <- read.csv("//aronas/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/pt_j.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
+test_llt <- read.csv("//aronas/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/llt.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
+test_llt_j <- read.csv("//aronas/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/llt_j.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
 test_test_ctcae <- test_ctcae %>% filter(`CTCAE v5.0\r\nMedDRA \r\nv20.1 Code` == 10016558)
 colnames(test_soc) <- kSoc_colname
 colnames(test_soc_j) <- kSoc_j_colname
@@ -59,7 +59,7 @@ test_test_llt_j <- test_llt_j %>% filter(llt_code == 10016558)
 test_llt_merge <- inner_join(test_test_llt, test_test_llt_j, by="llt_code") %>% select(c("llt_code", "llt_name", "pt_code", "llt_currency", "llt_kanji", "llt_jcurr"))
 test_test_mdhier <- test_mdhier %>% filter(pt_code == 10037660)
 # 出力ファイルチェック
-output_txt <- read.csv("/Volumes/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/llt_j2.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
+output_txt <- read.csv("//aronas/Projects/NMC ISR 情報システム研究室/MedDRA/V22.1/ASCII/MDRA_J221/llt_j2.asc", as.is=T, sep="$", header=F, fileEncoding="CP932")
 # 出力ファイルに含まれているlltのコードを出力
 target_llt <- test_llt[is.element(test_llt$llt_code, output_txt$V1),]
 # pt, mdhier, socとマージ
